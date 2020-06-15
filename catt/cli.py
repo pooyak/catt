@@ -3,6 +3,7 @@
 import configparser
 import random
 import sys
+import re
 import time
 from pathlib import Path
 from threading import Thread
@@ -45,7 +46,12 @@ class YtdlOptParamType(click.ParamType):
             self.fail("{} is not a valid key/value pair.".format(value))
 
         ykey, yval = value.split("=", 1)
-        yval = {"true": True, "false": False}.get(yval.lower().strip(), yval)
+        int_match = re.match(r'^(\d+)i$', yval)
+        if int_match:
+            print(int_match.groups())
+            yval = int(int_match.groups()[0])
+        else:
+            yval = {"true": True, "false": False}.get(yval.lower().strip(), yval)
         return (ykey, yval)
 
 
